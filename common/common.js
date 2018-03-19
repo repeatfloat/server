@@ -11,7 +11,7 @@ module.exports={
 	//注册提示
 	register:{
 		success:{
-			msg:'注册成功啦',
+			msg:'注册成功啦  请登录 !',
 			statusCode:200
 		},
 		info:{

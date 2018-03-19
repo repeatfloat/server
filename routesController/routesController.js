@@ -32,7 +32,7 @@ class RouteController {
 	}
 	//注册工能
 	registerController(req,res){
-		console.log('req.body ==> ', req.body);
+		// console.log('req.body ==> ', req.body);
 		//req.query 请求参数, GET请求携带参数
 
 		//req.body 请求参数, POST请求携带参数
@@ -79,7 +79,7 @@ class RouteController {
 		//接收sql语句
 		API.query(sql)
 
-		console.log(req.query)
+		// console.log(req.query)
 		.then(selectSQL =>{
 			//判断表里是否有该用户
 			if (result[0].length === 1) {
@@ -104,7 +104,7 @@ class RouteController {
 		.then(result => {
 			//判断表里是否有该用户
 			if (result[0].length === 1) {
-				console.log(result[0][0].phone)
+				// console.log(result[0][0].phone)
 			//如果有就登录成功啦
 			//登录成功后修改用户登录信息
 			// common.login.success.uid = result[0][0].uid;
@@ -146,16 +146,139 @@ class RouteController {
 
 	//首页功能
 	indexController (req, res) {
-		let sql = SQL.findHomeAllSQL();
-		API.query(sql)
-		.then(result => {
-			res.send(result[0]);
+		let sqlArray = SQL.findHomeAllSQL();
+		let data = {};
+		let names = ['banner', 'clsify']
+		sqlArray.forEach((sql, i) => {
+			API.query(sql)
+				.then(result => {
+					data[names[i]] = result[0];
+					if (i == sqlArray.length - 1) {
+						res.send(data);
+					}
+				}) 
+				
+				.catch(err => {
+					res.send('出错啦');
+				})
 		})
-		.catch(err=>{
-			res.send('出错啦');
-
+}
+	//详情页
+	productdetailController(req,res){
+		let array = SQL.findProductDetailSQL(req.query.id);
+		let data = {};
+		let names2 = ['product']
+		array.forEach((v, i) => {
+			API.query(v)
+				.then(result => {
+					data[names2[i]] = result[0];
+					if (i == array.length - 1) {
+						res.send(data);
+					}
+				}) 
+				
+				.catch(err => {
+					res.send(err);
+				})
 		})
 	}
+
+	//购物车
+	shoppingCartController (req,res){
+		let dete={};
+		//生成sql语句功能
+		let shoppingsql = SQL.shoppingcart2SQL(req.query);
+
+		let shopping=['shoppingsrun','shopp'];
+
+		shoppingsql.forEach((v,i)=>{
+			//接收sql语句
+		API.query(v)
+		.then(result =>{
+			dete[shopping[i]] = result[0];
+			if( i == shoppingsql.length-1){
+			res.send(dete);
+		}
+		})
+		.catch(err =>{
+			res.send('报错啦');
+		})
+		})
+		
+	}
+	//购买
+	pendingPaymentController(req,res){
+		let sql =SQL.shoppingsSQL(req.query);
+		API.query(sql)
+		let array = SQL.shoSQL(req.query);
+		let data = {};
+		let names2 = ['pending']
+		array.forEach((v, i) => {
+			API.query(v)
+				.then(result => {
+					data[names2[i]] = result[0];
+					if (i == array.length - 1) {
+						res.send(data);
+					}
+				}) 
+				
+				.catch(err => {
+					res.send(err);
+				})
+		})
+	}
+
+	//支付
+	compilerController(req,res){
+		let compiler =SQL.compilerSQL(req.query);
+		API.query(compiler)
+		let deletshopp=SQL.deletshoppSQL(req.query);
+		API.query(deletshopp)
+		let compilerarr = SQL.compSQL(req.query);
+		let data = {};
+		let numbers = ['compiler']
+		compilerarr.forEach((v, i) => {
+			API.query(v)
+				.then(result => {
+					data[numbers[i]] = result[0];
+					if (i == compilerarr.length - 1) {
+						res.send(data);
+					}
+				}) 
+				
+				.catch(err => {
+					res.send(err);
+				})
+		})
+	}
+	//等待发货
+	pendingDeliveryController(req,res){
+		let pensql =SQL.pendingdeliverySQL(req.query);
+		API.query(pensql)
+		let deletcompiler=SQL.deletcompilerSQL(req.query);
+		API.query(deletcompiler)
+		let pendingarr = SQL.pendingSQL(req.query);
+		let data = {};
+		let numbers = ['pending']
+		pendingarr.forEach((v, i) => {
+			API.query(v)
+				.then(result => {
+					data[numbers[i]] = result[0];
+					if (i == pendingarr.length - 1) {
+						res.send(data);
+					}
+				}) 
+				
+				.catch(err => {
+					res.send(err);
+				})
+		})
+	}
+
+
+
+
+
 }
 module.exports = new RouteController();
 
