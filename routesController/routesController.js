@@ -185,6 +185,11 @@ class RouteController {
 
 	//购物车
 	shoppingCartController (req,res){
+		let deletcollection3 =SQL.deletcollection3SQL(req.query);
+		API.query(deletcollection3);
+		console.log(deletcollection3)
+		let myCollection2 =SQL.myCollection2SQL(req.query);
+		API.query(myCollection2);
 		let dete={};
 		//生成sql语句功能
 		let shoppingsql = SQL.shoppingcart2SQL(req.query);
@@ -232,6 +237,9 @@ class RouteController {
 	compilerController(req,res){
 		let compiler =SQL.compilerSQL(req.query);
 		API.query(compiler)
+		// console.log(compiler)
+		let delettlement =SQL.delettlementSQL(req.query);
+		API.query(delettlement);
 		let deletshopp=SQL.deletshoppSQL(req.query);
 		API.query(deletshopp)
 		let compilerarr = SQL.compSQL(req.query);
@@ -274,11 +282,118 @@ class RouteController {
 				})
 		})
 	}
+	//添加收货地址
+	managementAddressController(req,res){
+		let deletaddres =SQL.deletaddresSQL(req.query);
+		API.query(deletaddres);
+		// console.log(deletaddres)
+	}
+	//set收货地址
+	newlyIncreasedAddressController(req,res){
+		let addres =SQL.setaddresSQL(req.query);
+		API.query(addres);
+		let setaddres = SQL.addresSQL(req.query);
+		let data = {};
+		let numbers = ['addre']
+		setaddres.forEach((v, i) => {
+			API.query(v)
+				.then(result => {
+					data[numbers[i]] = result[0];
+					if (i == setaddres.length - 1) {
+						res.send(data);
+					}
+				}) 
+				
+				.catch(err => {
+					res.send(err);
+				})
+		})
+	}
 
+	settlementController(req,res){
+		let setcompiler =SQL.setcompilerSQL(req.query);
+		API.query(setcompiler);
+		let settlement =SQL.settlementSQL(req.query);
+		API.query(settlement);
+		let tlements = SQL.tlementsSQL(req.query);
+		let data = {};
+		let numbers = ['settlement']
+		tlements.forEach((v, i) => {
+			API.query(v)
+				.then(result => {
+					data[numbers[i]] = result[0];
+					if (i == tlements.length - 1) {
+						res.send(data);
+					}
+				}) 
+				
+				.catch(err => {
+					res.send(err);
+				})
+		})
+	}
+	//收藏
+	myCollectionController(req,res){
+		let deletmyCollection2 =SQL.deletmyCollection2SQL(req.query);
+		API.query(deletmyCollection2);
+		let myCollection =SQL.myCollectionSQL(req.query);
+		API.query(myCollection);
+		let data = {};
+		let collection = SQL.collectionSQL(req.query);
+		let numbers = ['settlement','collection']
+		collection.forEach((v, i) => {
+		API.query(v)
+		.then(result => {
+			data[numbers[i]] = result[0];
+			if (i == collection.length - 1) {
+				res.send(data);
+			}
+		})
+		.catch(err => {
+			res.send(err);
+			})
+		})
+		
+	}
 
-
-
+	//护肤方案
+	schemeController(req,res){
+		let data = {};
+		let scheme = SQL.schemeCSQL(req.query);
+		let numbers = ['scheme','scheme1']
+		scheme.forEach((v, i) => {
+		API.query(v)
+		.then(result => {
+			data[numbers[i]] = result[0];
+			if (i == scheme.length - 1) {
+				res.send(data);
+			}
+		})
+		.catch(err => {
+			res.send(err);
+			})
+		})
+	}
+	//护肤步骤
+	skincarestepsController(req,res){
+		let data = {};
+		let skincaresteps = SQL.skincarestepsCSQL(req.query);
+		let numbers = ['skincaresteps','skincaresteps1','skincaresteps2']
+		skincaresteps.forEach((v, i) => {
+		API.query(v)
+		.then(result => {
+			data[numbers[i]] = result[0];
+			if (i == skincaresteps.length - 1) {
+				res.send(data);
+			}
+		})
+		.catch(err => {
+			res.send(err);
+			})
+		})
+	}
 
 }
 module.exports = new RouteController();
+
 
