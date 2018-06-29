@@ -1,6 +1,6 @@
 let server = {
 	host: '127.0.0.1',
-	port: '9000'
+	port: '5000'
 };
 
 exports.mysqlOptions = {

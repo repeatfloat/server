@@ -100,11 +100,10 @@ class RouteController {
 		let sql = SQL.loginSQL(req.body);
 		//接收sql语句
 		API.query(sql)
-
 		.then(result => {
+			console.log(result);
 			//判断表里是否有该用户
 			if (result[0].length === 1) {
-				// console.log(result[0][0].phone)
 			//如果有就登录成功啦
 			//登录成功后修改用户登录信息
 			// common.login.success.uid = result[0][0].uid;
@@ -114,7 +113,6 @@ class RouteController {
 			//1:登录状态
 			let updatesql = SQL.updateLoginStatusSQL(req.body, 1);
 			API.query(updatesql)
-			
 				.then(result =>{
 					res.send(common.login.success);
 				})
@@ -127,6 +125,7 @@ class RouteController {
 			}
 		})
 		.catch(err => {
+			console.log(err)
 			res.json(common.login.error);
 		})
 	}
@@ -219,6 +218,7 @@ class RouteController {
 		let data = {};
 		let names2 = ['pending']
 		array.forEach((v, i) => {
+			console.log(v)
 			API.query(v)
 				.then(result => {
 					data[names2[i]] = result[0];
